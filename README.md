@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Retail Sales Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This repository contains a full-stack Retail Sales Management System: a Vite + React + TypeScript frontend and a Node.js + Express backend that reads from AWS DynamoDB. The app demonstrates handling very large datasets (≈1,000,000 records) with performant search, multi-filters, sorting, and pagination.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Fast search** with debounce and server-assisted full-text matching (customer name, phone).
+- **Multi-dimensional filters** (region,age, product category, date range, payment method, etc.).
+- **Stable sorting** (date, quantity, customer name) applied server-side for large results.
+- **Chunked DynamoDB scanning** to process large datasets efficiently and avoid memory spikes.
+- **App-level pagination** with consistent page sizes for dashboard UX.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend:** React (Vite) + TypeScript + Tailwind CSS
+- **Backend:** Node.js + Express
+- **Database:** AWS DynamoDB (accessed via AWS SDK v3)
+- **HTTP client:** Axios
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Repo Structure (high level)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    # Retail Management System — Frontend
+- `backend/` — Express API, DynamoDB integration, `src/` contains controllers, services, utils and `index.js`.
+- `frontend/` — Vite + React app located in `frontend/` with components, hooks and services.
+- `docs/` — Architecture and design docs (see `docs/Architecture.md`).
 
-    ## Overview
+## Quick Start
 
-    This frontend is a Vite + React + TypeScript single-page app that displays sales data and metrics. It fetches data from the repository's backend service and provides search, filter, sort, and pagination controls to explore the dataset. Components live in `src/components` and data-fetching logic is in `src/hooks` and `src/services`.
+1. Start the backend (from repository root):
 
-    ## Tech Stack
+```powershell
+cd backend
+npm install
+# Run the backend (if no npm start script is defined)
+node src/index.js
+```
 
-    - **Framework:** React (v19)
-    - **Language:** TypeScript
-    - **Bundler:** Vite
-    - **HTTP client:** Axios
-    - **Styling:** Tailwind CSS
+2. Start the frontend in a separate terminal:
 
-    ## Search Implementation Summary
+```powershell
+cd frontend
+npm install
+npm run dev
+```
 
-    Search uses `src/components/SearchBar.tsx` and the debounce hook `src/hooks/useDebouncedValue.ts`. The debounced query flows into `src/hooks/useSalesData.ts`, which sends the search term to the backend via `src/services/api.ts`. Debouncing reduces requests and improves user experience.
+## Environment / AWS notes
 
-    ## Filter Implementation Summary
+- Copy `backend/.env.example` to `backend/.env` and fill in real values before running the backend.
+- The backend expects AWS credentials (or a local DynamoDB endpoint configured via `DYNAMODB_ENDPOINT`).
 
-    Filtering UI is provided by `src/components/Filters.tsx`. Filter selections (date range, region, product, etc.) are managed in component state and passed to `useSalesData.ts`, which includes them as query parameters in API requests. The separation keeps UI and data concerns isolated.
+Example `backend/.env` (from `backend/.env.example`):
 
-    ## Sorting Implementation Summary
+```
+PORT=3000
+NODE_ENV=development
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
+DYNAMODB_ENDPOINT=http://localhost:8000
+SALES_TABLE_NAME=SalesTable
+```
 
-    `src/components/SortBar.tsx` exposes sort field and direction. `useSalesData.ts` forwards these to the API; sorting is performed server-side for large datasets, with client-side sorting used for small cached result sets.
+## Development notes
 
-    ## Pagination Implementation Summary
+- Frontend dev server uses Vite (default port `5173`).
+- Backend uses AWS SDK v3 for DynamoDB; ensure `AWS_*` env vars or local endpoints are configured.
 
-    Pagination is implemented in `src/components/Pagination.tsx`. `useSalesData.ts` accepts `page` and `pageSize` and requests the appropriate page from the backend (offset/limit or cursor). The UI shows next/previous and page selectors.
+## Docs and references
 
-    ## Setup Instructions
+- Architecture: `docs/Architecture.md`
+- Frontend-specific README: `frontend/README.md`
 
-    1. Start the backend (from repository root):
-
-    ```
-    cd backend
-    npm install
-    # If no start script exists, run the main file directly
-    node src/index.js
-    ```
-
-    2. Start the frontend in a separate terminal:
-
-    ```
-    cd frontend
-    npm install
-    npm run dev
-    ```
-
-    Notes:
-    - Provide AWS/DynamoDB credentials and any required env vars in `backend/.env` if using AWS services.
-    - Vite dev server defaults to port `5173`.
+If you'd like, I can also add a short `CONTRIBUTING.md` or sample Postman collection next.
