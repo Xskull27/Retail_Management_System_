@@ -295,3 +295,5 @@ Frontend Renders Table + Summary + Pagination
 
 	- Sidebar, SearchBar, FiltersRow, SummaryCards, Table, Pagination.
 
+-----------------------------------------------
+Indexing Could have been done,for better Searching and Filtering of Data.
