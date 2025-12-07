@@ -10,8 +10,6 @@ export default function Pagination({ page, setPage, pageInfo }: Props) {
     ? Math.max(1, Math.ceil(pageInfo.totalFiltered / pageInfo.pageSize))
     : 6;
 
-  // Pagination window: show current page with one sibling on each side,
-  // always show first and last pages, and use ellipses when skipping.
   const siblings = 1;
   const pages: (number | string)[] = [];
 
@@ -29,12 +27,11 @@ export default function Pagination({ page, setPage, pageInfo }: Props) {
 
     for (let i = left; i <= right; i++) pages.push(i);
 
-    // If there are more pages beyond the right window, show a trailing ellipsis
-    // but do not show the final page buttons after it (per request).
+   
     if (right < totalPages - 1) {
       pages.push("...");
     } else {
-      // If the window already reaches the tail, show remaining pages normally
+     
       for (let i = right + 1; i <= totalPages; i++) pages.push(i);
     }
   }
@@ -50,7 +47,7 @@ export default function Pagination({ page, setPage, pageInfo }: Props) {
         Previous
       </button>
 
-      {/* Page Numbers */}
+     
       {pages.map((p, idx) => (
         typeof p === "number" ? (
           <button
@@ -68,7 +65,7 @@ export default function Pagination({ page, setPage, pageInfo }: Props) {
         )
       ))}
 
-      {/* Next Button */}
+    
       <button
         disabled={page >= totalPages}
         onClick={() => setPage(Math.min(totalPages, page + 1))}

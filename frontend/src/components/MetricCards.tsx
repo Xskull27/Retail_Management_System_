@@ -48,7 +48,7 @@ function MetricCard({ title, value, subtitle, textColor, tooltip }: MetricCardPr
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-medium text-gray-600">{title}</span>
-                        {/* Info tooltip - shown only when `tooltip` prop is provided */}
+                      
                         {tooltip && (
                             <div className="relative ml-1">
                                 <div className="group">

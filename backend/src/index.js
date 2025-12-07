@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// All sales APIs will live here:
+// All sales APIs will be live thru here:
 app.use("/api/sales", salesRoutes);
 
 const PORT = process.env.PORT || 3000;

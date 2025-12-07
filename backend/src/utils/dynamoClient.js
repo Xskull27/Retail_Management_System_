@@ -18,6 +18,6 @@ export const ddbDocClient = DynamoDBDocumentClient.from(client, {
     removeUndefinedValues: true
   },
   unmarshallOptions: {
-    wrapNumbers: false    // <-- THIS makes S,N go away
+    wrapNumbers: false    
   }
 });

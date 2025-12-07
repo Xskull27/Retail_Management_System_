@@ -6,10 +6,10 @@ interface HeaderProps {
 export default function Header({ search, setSearch }: HeaderProps) {
     return (
         <div className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between shadow-sm">
-            {/* Title */}
+           
             <h1 className="text-xl font-semibold text-gray-800">Sales Management System</h1>
 
-            {/* Search and User Profile */}
+           
             <div className="flex items-center gap-4">
                 {/* Search Bar */}
                 <div className="relative">
@@ -30,7 +30,7 @@ export default function Header({ search, setSearch }: HeaderProps) {
                     </svg>
                 </div>
 
-                {/* User Profile */}
+                
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
                         R

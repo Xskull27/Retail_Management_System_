@@ -11,7 +11,7 @@ export default function Filters({ filters, setFilters }: Props) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  // track focus state for the tags input so the animated placeholder hides on focus
+
   const [tagFocus, setTagFocus] = useState(false);
 
   return (
@@ -90,9 +90,9 @@ export default function Filters({ filters, setFilters }: Props) {
       {/* Tags */}
       <div className="flex flex-col">
         <div className="flex flex-col relative group">
-          {/* simple marquee keyframes injected locally; animation pauses when parent (group) is hovered */}
+
           <style>{`@keyframes marquee{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}} .group:hover .marquee{animation-play-state:paused;}`}</style>
-          {/* helper label above the input (accessibly linked) */}
+
           <label htmlFor="tags-input" className="text-xs text-gray-500 mb-1">Separate tags with commas — <span className="text-gray-700"></span></label>
 
           <div className="relative w-[160px]">
@@ -107,10 +107,11 @@ export default function Filters({ filters, setFilters }: Props) {
               onBlur={() => setTagFocus(false)}
             />
 
-            {/* Animated placeholder shown only when input empty and not focused; overlay positioned within input box */}
+
             {!filters.tags && !tagFocus && (
               <div className="absolute inset-0 pl-4 flex items-center pointer-events-none overflow-hidden">
-                <div style={{ whiteSpace: "nowrap", animation: "marquee 12s linear infinite" }} className="text-sm text-gray-400 marquee">
+                <div style={{ whiteSpace: "nowrap", animation: "marquee 12s linear infinite" }}
+                  className="text-sm text-gray-400 marquee">
                   Tags (e.g. portable, gadgets, wireless)&nbsp;&nbsp;&nbsp;
                 </div>
               </div>
@@ -161,7 +162,7 @@ export default function Filters({ filters, setFilters }: Props) {
         />
       </div>
 
-      {/* Validation: show error if From > To */}
+      
       {filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo && (
         <div className="w-full text-xs text-red-600 mt-1">Date From must be before or equal to Date To.</div>
       )}

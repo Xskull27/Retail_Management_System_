@@ -1,9 +1,9 @@
 interface Props {
   sortBy: string;
   setSortBy: (sortBy: string) => void;
-  // hook uses string for sortOrder (e.g. "asc" | "desc" | "") so accept string
+  
   sortOrder?: string | null;
-  // match hook's setter signature (string-based)
+  
   setSortOrder?: (o: string) => void;
 }
 

@@ -37,22 +37,20 @@ export default function useSalesData() {
   const [data, setData] = useState<any[]>([]);
   const [pageInfo, setPageInfo] = useState<any>({});
 
-  // Debounce the search input to avoid firing on every keystroke.
+  // Debounce the search input
   const debouncedSearch = useDebouncedValue(search, 300);
 
-  // Trigger load when debounced search changes — only when search is empty
-  // (cleared) or has at least 3 characters. This prevents firing
-  // requests for short queries.
+  
   useEffect(() => {
     if (debouncedSearch && debouncedSearch.length < 3) return;
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [debouncedSearch]);
 
-  // Trigger load for other controls (filters, sorting, pagination).
+  
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [filters, sortBy, sortOrder, page]);
 
   const loadData = async () => {

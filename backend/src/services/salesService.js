@@ -5,13 +5,13 @@ import { ddbDocClient } from "../utils/dynamoClient.js";
 
 const TABLE_NAME = process.env.DYNAMO_TABLE_NAME;
 
-// how many items max we are willing to scan per request (safety for 10 lakh rows)
+// how many items max we are willing to scan per request
 const MAX_SCANNED_ITEMS = 50000;
 const CHUNK_SIZE = 2000;
 
-/* ---------------------------------------------------------
-   BUILD FILTER EXPRESSIONS (region, gender, age, etc.)
---------------------------------------------------------- */
+
+   //BUILD FILTER EXPRESSIONS HERE (region, gender, age, etc.)
+
 const buildFilterExpression = (params, filters) => {
   const {
     region,
@@ -40,10 +40,7 @@ const buildFilterExpression = (params, filters) => {
   if (category) add("#category = :category", "#category", "ProductCategory", ":category", category);
   if (paymentMethod) add("#pm = :pm", "#pm", "PaymentMethod", ":pm", paymentMethod);
 
-  // NOTE: Age values in the table are strings in many datasets.
-  // Comparing DynamoDB string attributes to numeric ExpressionAttributeValues
-  // can produce no matches. We apply age filtering in the application layer
-  // (see below) to avoid type-mismatch issues here.
+  
 
   if (dateFrom) add("#date >= :dateFrom", "#date", "Date", ":dateFrom", dateFrom);
   if (dateTo) add("#date <= :dateTo", "#date", "Date", ":dateTo", dateTo);
@@ -79,8 +76,8 @@ export const fetchSales = async (query) => {
     paymentMethod,
     dateFrom,
     dateTo,
-    sortBy = "Date",      // "Date" | "Quantity" | "CustomerName"
-    sortOrder = "desc",   // "asc" | "desc"
+    sortBy = "Date",      
+    sortOrder = "desc",   
     page = 1,
     pageSize = 10,
   } = query;
@@ -91,7 +88,7 @@ export const fetchSales = async (query) => {
   const searchText = search.trim().toLowerCase();
   const isSearchActive = searchText.length > 0;
 
-  // 1) SCAN WITH FILTERS (on non-search fields)
+  // 1) We SCAN WITH FILTERS 
   let params = {
     TableName: TABLE_NAME,
     Limit: CHUNK_SIZE,
@@ -118,16 +115,15 @@ export const fetchSales = async (query) => {
       params.ExclusiveStartKey = lastKey;
     }
 
-    // Debug: log what params are being sent to DynamoDB (do not log sensitive info in prod)
-    console.log("DynamoDB Scan params keys:", Object.keys(params));
+    
+    
     const result = await ddbDocClient.send(new ScanCommand(params));
     const items = result.Items || [];
 
-    // Apply additional in-memory filters that require type conversions
-    // (age filtering) and also apply the search filter if active.
+    
     let processed = items;
 
-    // Age filtering: convert item.Age (often stored as string) to Number safely
+    
     const minAge = ageMin ? Number(ageMin) : null;
     const maxAge = ageMax ? Number(ageMax) : null;
     if (minAge !== null) {
@@ -143,7 +139,7 @@ export const fetchSales = async (query) => {
       });
     }
 
-    // If search is active, filter items by name/phone as before
+    // If search is active, filter items by name/phone
     if (isSearchActive) {
       processed = processed.filter(item => {
         const name = item.CustomerName ? String(item.CustomerName).toLowerCase() : "";
@@ -163,17 +159,16 @@ export const fetchSales = async (query) => {
 
     lastKey = result.LastEvaluatedKey;
 
-    // stop if we have enough filtered results for required pages
     const needed = pageNum * size;
     if (all.length >= needed) break;
 
     if (scannedCount >= MAX_SCANNED_ITEMS) break;
   } while (lastKey);
 
-  // 2) SEARCH ALREADY APPLIED ABOVE IF ACTIVE
+
   let filtered = all;
 
-  // 3) SORT
+  // 2) we will SORT here
   filtered.sort((a, b) => {
     let av, bv;
 
@@ -187,7 +182,7 @@ export const fetchSales = async (query) => {
       av = (a.CustomerName || "").toLowerCase();
       bv = (b.CustomerName || "").toLowerCase();
     } else {
-      // default fallback: Date desc
+      
       av = new Date(a.Date).getTime();
       bv = new Date(b.Date).getTime();
     }
@@ -197,7 +192,7 @@ export const fetchSales = async (query) => {
     return 0;
   });
 
-  // 4) PAGINATE (page-based, always 10 per spec)
+  // PAGINATE 
   const start = (pageNum - 1) * size;
   const end = start + size;
 
@@ -210,7 +205,7 @@ export const fetchSales = async (query) => {
       page: pageNum,
       pageSize: size,
       hasNextPage,
-      totalFiltered: filtered.length, // optional: helpful for UI
+      totalFiltered: filtered.length, 
     },
   };
 };

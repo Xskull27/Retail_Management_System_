@@ -20,14 +20,14 @@ export default function SalesDashboard() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 overflow-x-hidden">
-      {/* Main Content */}
+
       <div className="flex-1 transition-all duration-300 overflow-x-hidden">
-        {/* Header */}
+
         <Header search={search} setSearch={setSearch} />
 
-        {/* Content Area */}
+
         <div className="p-6 max-w-screen-xl mx-auto">
-          {/* Filters and Sort */}
+
           <div className="flex items-center justify-between mb-6">
             <Filters filters={filters} setFilters={setFilters} />
             <SortBar
@@ -38,13 +38,13 @@ export default function SalesDashboard() {
             />
           </div>
 
-          {/* Metric Cards */}
+
           <MetricCards data={data} />
 
-          {/* Table */}
+
           <Table data={data} />
 
-          {/* Pagination */}
+
           <Pagination page={page} setPage={setPage} pageInfo={pageInfo} />
         </div>
       </div>
