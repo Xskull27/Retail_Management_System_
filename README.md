@@ -1,4 +1,4 @@
-# Retail Sales Management System
+# Retail Sales Management System 🛒
 
 ## Overview
 
