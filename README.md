@@ -4,7 +4,8 @@
 
 This repository contains a full-stack Retail Sales Management System: a Vite + React + TypeScript frontend and a Node.js + Express backend that reads from AWS DynamoDB. The app demonstrates handling very large datasets (≈1,000,000 records) with performant search, multi-filters, sorting, and pagination.
 
-![Sales Dashboard](docs/sales-dashboard.png)
+<img src="./docs/Screenshot%202025-12-08%20011616.png" alt="Sales Dashboard" width="100%" />
+
 
 ## Features
 
