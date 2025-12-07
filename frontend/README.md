@@ -19,55 +19,55 @@ If you are developing a production application, we recommend updating the config
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    # Retail Management System — Frontend
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    ## Overview
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    This frontend is a Vite + React + TypeScript single-page app that displays sales data and metrics. It fetches data from the repository's backend service and provides search, filter, sort, and pagination controls to explore the dataset. Components live in `src/components` and data-fetching logic is in `src/hooks` and `src/services`.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    ## Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    - **Framework:** React (v19)
+    - **Language:** TypeScript
+    - **Bundler:** Vite
+    - **HTTP client:** Axios
+    - **Styling:** Tailwind CSS
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    ## Search Implementation Summary
+
+    Search uses `src/components/SearchBar.tsx` and the debounce hook `src/hooks/useDebouncedValue.ts`. The debounced query flows into `src/hooks/useSalesData.ts`, which sends the search term to the backend via `src/services/api.ts`. Debouncing reduces requests and improves user experience.
+
+    ## Filter Implementation Summary
+
+    Filtering UI is provided by `src/components/Filters.tsx`. Filter selections (date range, region, product, etc.) are managed in component state and passed to `useSalesData.ts`, which includes them as query parameters in API requests. The separation keeps UI and data concerns isolated.
+
+    ## Sorting Implementation Summary
+
+    `src/components/SortBar.tsx` exposes sort field and direction. `useSalesData.ts` forwards these to the API; sorting is performed server-side for large datasets, with client-side sorting used for small cached result sets.
+
+    ## Pagination Implementation Summary
+
+    Pagination is implemented in `src/components/Pagination.tsx`. `useSalesData.ts` accepts `page` and `pageSize` and requests the appropriate page from the backend (offset/limit or cursor). The UI shows next/previous and page selectors.
+
+    ## Setup Instructions
+
+    1. Start the backend (from repository root):
+
+    ```
+    cd backend
+    npm install
+    # If no start script exists, run the main file directly
+    node src/index.js
+    ```
+
+    2. Start the frontend in a separate terminal:
+
+    ```
+    cd frontend
+    npm install
+    npm run dev
+    ```
+
+    Notes:
+    - Provide AWS/DynamoDB credentials and any required env vars in `backend/.env` if using AWS services.
+    - Vite dev server defaults to port `5173`.
