@@ -153,9 +153,6 @@ export default function Filters({ filters, setFilters }: Props) {
         <label className="text-xs text-gray-600 mb-1">Date To</label>
         <input
           type="date"
-          aria-invalid={
-            filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo
-          }
           className="h-10 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm hover:border-gray-300 transition-colors"
           value={filters.dateTo}
           onChange={(e) => update("dateTo", e.target.value)}
