@@ -71,4 +71,4 @@ SALES_TABLE_NAME=SalesTable
 - Architecture: `docs/Architecture.md`
 - Frontend-specific README: `frontend/README.md`
 
-If you'd like, I can also add a short `CONTRIBUTING.md` or sample Postman collection next.
+
