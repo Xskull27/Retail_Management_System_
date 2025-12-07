@@ -15,7 +15,7 @@ export default function logiMetricCards({ data }: Props) {
     const totalAmount = data.reduce((sum, item) => sum + parseNumber(item.TotalAmount), 0);
 
     return (
-        <div className="flex flex-row gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <MetricCard
                 title="Total units sold"
                 tooltip="Sum of unit quantities for the currently visible rows (current page)."
@@ -43,7 +43,7 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, subtitle, textColor, tooltip }: MetricCardProps) {
     return (
-        <div className="bg-white w-1/4 rounded-lg shadow-sm border border-gray-200 p-6 transition-all hover:shadow-md">
+        <div className="bg-white w-full rounded-lg shadow-sm border border-gray-200 p-5 sm:p-6 transition-all hover:shadow-md">
             <div className="flex items-start justify-between">
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
@@ -66,7 +66,7 @@ function MetricCard({ title, value, subtitle, textColor, tooltip }: MetricCardPr
                             </div>
                         )}
                     </div>
-                    <div className={`text-2xl font-bold ${textColor} mb-1`}>
+                    <div className={`text-xl sm:text-2xl font-bold ${textColor} mb-1`}>
                         {value}
                     </div>
                     {subtitle && (

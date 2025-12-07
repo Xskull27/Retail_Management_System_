@@ -15,11 +15,11 @@ export default function Filters({ filters, setFilters }: Props) {
   const [tagFocus, setTagFocus] = useState(false);
 
   return (
-    <div className="flex items-center gap-4 flex-wrap">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-wrap">
       {/* Customer Region */}
       <div className="relative mt-4">
         <select
-          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-[180px]"
+          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[180px]"
           value={filters.region}
           onChange={(e) => update("region", e.target.value)}
         >
@@ -35,7 +35,7 @@ export default function Filters({ filters, setFilters }: Props) {
       {/* Gender */}
       <div className="relative mt-4">
         <select
-          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-[140px]"
+          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[140px]"
           value={filters.gender}
           onChange={(e) => update("gender", e.target.value)}
         >
@@ -49,7 +49,7 @@ export default function Filters({ filters, setFilters }: Props) {
       {/* Age Range */}
       <div className="relative mt-4">
         <select
-          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-[140px]"
+          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[140px]"
           value={filters.ageMin && filters.ageMax ? `${filters.ageMin}-${filters.ageMax}` : ""}
           onChange={(e) => {
             if (e.target.value === "") {
@@ -74,7 +74,7 @@ export default function Filters({ filters, setFilters }: Props) {
       {/* Product Category */}
       <div className="relative mt-4">
         <select
-          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-[180px]"
+          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[180px]"
           value={filters.category}
           onChange={(e) => update("category", e.target.value)}
         >
@@ -95,7 +95,7 @@ export default function Filters({ filters, setFilters }: Props) {
 
           <label htmlFor="tags-input" className="text-xs text-gray-500 mb-1">Separate tags with commas — <span className="text-gray-700"></span></label>
 
-          <div className="relative w-[160px]">
+          <div className="relative w-full sm:w-[160px]">
             <input
               id="tags-input"
               type="text"
@@ -123,7 +123,7 @@ export default function Filters({ filters, setFilters }: Props) {
       {/* Payment Method */}
       <div className="relative mt-4">
         <select
-          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-[180px]"
+          className="h-10 px-4 pr-8 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent cursor-pointer appearance-none shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[180px]"
           value={filters.paymentMethod}
           onChange={(e) => update("paymentMethod", e.target.value)}
         >
@@ -142,7 +142,7 @@ export default function Filters({ filters, setFilters }: Props) {
         <label className="text-xs text-gray-600 mb-1">Date From</label>
         <input
           type="date"
-          className="h-10 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm hover:border-gray-300 transition-colors"
+          className="h-10 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[160px]"
           value={filters.dateFrom}
           onChange={(e) => update("dateFrom", e.target.value)}
         />
@@ -153,7 +153,7 @@ export default function Filters({ filters, setFilters }: Props) {
         <label className="text-xs text-gray-600 mb-1">Date To</label>
         <input
           type="date"
-          className="h-10 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm hover:border-gray-300 transition-colors"
+          className="h-10 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent shadow-sm hover:border-gray-300 transition-colors w-full sm:w-[160px]"
           value={filters.dateTo}
           onChange={(e) => update("dateTo", e.target.value)}
         />
