@@ -36,36 +36,42 @@ export default function useSalesData() {
 
   const [data, setData] = useState<any[]>([]);
   const [pageInfo, setPageInfo] = useState<any>({});
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Debounce the search input
-  const debouncedSearch = useDebouncedValue(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 600);
 
-  
+  // Reset page to 1 when search or filters change (not when page changes)
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, filters, sortBy, sortOrder]);
+
+  // Load data when any dependency changes
   useEffect(() => {
     if (debouncedSearch && debouncedSearch.length < 3) return;
     loadData();
-    
-  }, [debouncedSearch]);
-
-  
-  useEffect(() => {
-    loadData();
-    
-  }, [filters, sortBy, sortOrder, page]);
+  }, [debouncedSearch, filters, sortBy, sortOrder, page]);
 
   const loadData = async () => {
-    const params: SalesParams = {
-      search,
-      ...filters,
-      sortBy,
-      sortOrder,
-      page,
-      pageSize: 10,
-    };
+    setLoading(true);
+    try {
+      const params: SalesParams = {
+        search: debouncedSearch,
+        ...filters,
+        sortBy,
+        sortOrder,
+        page,
+        pageSize: 10,
+      };
 
-    const res = await fetchSales(params);
-    setData(res.items);
-    setPageInfo(res.pageInfo);
+      const res = await fetchSales(params);
+      setData(res.items);
+      setPageInfo(res.pageInfo);
+    } catch (error) {
+      console.error('Error fetching sales:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
@@ -76,5 +82,6 @@ export default function useSalesData() {
     page, setPage,
     data,
     pageInfo,
+    loading,
   };
 }
