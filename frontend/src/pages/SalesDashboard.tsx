@@ -3,7 +3,6 @@ import useSalesData from "../hooks/useSalesData";
 import Header from "../components/Header";
 import MetricCards from "../components/MetricCards";
 import Filters from "../components/Filters";
-//import SortBar from "../components/SortBar";
 import Table from "../components/Table";
 import Pagination from "../components/Pagination";
 import Sidebar from "../components/Sidebar";
