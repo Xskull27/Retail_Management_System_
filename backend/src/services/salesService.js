@@ -220,17 +220,14 @@ export const fetchSales = async (query) => {
     }
   }
 
-  // 1) Scan for search results only - NO DB filters (applied client-side)
+  
   // This allows search cache to be reused when filters change
-  const chunkSize = SEARCH_ONLY_CHUNK; // Always use large chunks for search
+  const chunkSize = SEARCH_ONLY_CHUNK;
   
   let params = {
     TableName: TABLE_NAME,
     Limit: chunkSize,
   };
-
-  // NO buildFilterExpression - we only scan for search matches
-  // Filters will be applied client-side to cached results
 
   let all = cached ? [...cached.data] : [];
   let scannedCount = cached ? cached.scannedCount : 0;

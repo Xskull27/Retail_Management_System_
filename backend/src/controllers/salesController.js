@@ -8,7 +8,7 @@ export const getSales = async (req, res) => {
 
     res.json(result);
   } catch (err) {
-    console.error("🔥 ERROR INSIDE CONTROLLER:", err); 
+    console.error("ERROR INSIDE CONTROLLER:", err); 
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

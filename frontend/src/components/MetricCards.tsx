@@ -11,10 +11,10 @@ export default function logiMetricCards({ data }: Props) {
         const n = Number(s);
         return Number.isFinite(n) ? n : 0;
     };
-    // Sum only the rows currently present in `data` (current page)
+  
     const totalAmount = data.reduce((sum, item) => sum + parseNumber(item.TotalAmount), 0);
     
-    // Calculate total discount - sum all discount amounts from DiscountPercentage field
+   
     // Formula: (TotalAmount * DiscountPercentage) / 100
     const totalDiscount = data.reduce((sum, item) => {
         const amount = parseNumber(item.TotalAmount);
