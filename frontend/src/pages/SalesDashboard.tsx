@@ -21,7 +21,7 @@ export default function SalesDashboard() {
   }, []);
 
   const {
-    search, setSearch,
+    setSearch,
     filters, setFilters,
     sortBy, setSortBy,
     sortOrder, setSortOrder,
