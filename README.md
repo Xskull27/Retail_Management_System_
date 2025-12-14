@@ -4,10 +4,10 @@
 
 Managing large-scale retail data efficiently is challenging. This project tackles that by building a performant dashboard that handles **1 million sales records** from AWS DynamoDB. The system combines a modern React + TypeScript frontend with an optimized Node.js backend, featuring intelligent caching, progressive loading, and multi-dimensional filtering to ensure smooth user experience even at scale.
 
-![Project screenshot](./image.png)
+<img width="1915" height="1011" alt="image" src="https://github.com/user-attachments/assets/f6bdc457-a2be-4cb5-9ea7-e7aa7a70c22a" />
 
 
-![alt text](image.png)
+
 ## Features
 
 - **Fast search** with debounce and server-assisted full-text matching (customer name, phone).
