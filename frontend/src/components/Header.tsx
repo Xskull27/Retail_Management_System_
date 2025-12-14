@@ -2,11 +2,12 @@ interface HeaderProps {
     searchInput: string;
     setSearchInput: (search: string) => void;
     onSearch: () => void;
+    onClearSearch: () => void;
     onMenuClick?: () => void;
     showMenuButton?: boolean;
 }
 
-export default function Header({ searchInput, setSearchInput, onSearch, onMenuClick, showMenuButton = false }: HeaderProps) {
+export default function Header({ searchInput, setSearchInput, onSearch, onClearSearch, onMenuClick, showMenuButton = false }: HeaderProps) {
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             onSearch();
@@ -49,7 +50,7 @@ export default function Header({ searchInput, setSearchInput, onSearch, onMenuCl
                     </svg>
                     {searchInput && (
                         <button
-                            onClick={() => setSearchInput("")}
+                            onClick={onClearSearch}
                             className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                         >
                             <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

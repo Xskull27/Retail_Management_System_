@@ -36,6 +36,12 @@ export default function SalesDashboard() {
     setPage(1); // Reset to page 1 when search changes
   };
 
+  const handleClearSearch = () => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
@@ -45,6 +51,7 @@ export default function SalesDashboard() {
           searchInput={searchInput}
           setSearchInput={setSearchInput}
           onSearch={handleSearch}
+          onClearSearch={handleClearSearch}
           onMenuClick={() => setSidebarOpen(true)}
           showMenuButton={!sidebarOpen}
         />
