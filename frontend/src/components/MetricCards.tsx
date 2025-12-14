@@ -30,7 +30,7 @@ export default function logiMetricCards({ data }: Props) {
     }).length;
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 sm:gap-2 mb-2 sm:mb-3 md:mb-4">
             <MetricCard
                 title="Total units sold"
                 tooltip="Sum of unit quantities for the currently visible rows (current page)."
@@ -65,11 +65,11 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, subtitle, textColor, tooltip }: MetricCardProps) {
     return (
-        <div className="bg-white w-full rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 transition-all hover:shadow-md">
+        <div className="bg-white w-full rounded-lg shadow-sm border border-gray-200 p-1 sm:p-2 transition-all hover:shadow-md">
             <div className="flex items-start justify-between">
                 <div className="flex-1">
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
-                        <span className="text-xs sm:text-sm font-medium text-gray-600">{title}</span>
+                    <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-0.5">
+                        <span className="text-[11px] sm:text-xs font-medium text-gray-600">{title}</span>
                       
                         {tooltip && (
                             <div className="relative ml-0.5 sm:ml-1">
@@ -88,7 +88,7 @@ function MetricCard({ title, value, subtitle, textColor, tooltip }: MetricCardPr
                             </div>
                         )}
                     </div>
-                    <div className={`text-lg sm:text-xl md:text-2xl font-bold ${textColor} mb-0.5`}>
+                    <div className={`text-base sm:text-lg md:text-xl font-bold ${textColor} mb-0.5`}>
                         {value}
                     </div>
                     {subtitle && (
