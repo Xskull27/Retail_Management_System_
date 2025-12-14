@@ -10,7 +10,7 @@ const MAX_SCANNED_ITEMS = 1000000; // Handle up to 1M database
 const CHUNK_SIZE = 10000; // Items to scan per DynamoDB request (with filters)
 const SEARCH_ONLY_CHUNK = 100000; // Large chunks when only searching (faster full scan)
 const QUICK_RETURN_THRESHOLD = 100; // Return quickly with at least 100 matches
-const SCAN_AHEAD_PAGES = 3; // Scan ahead for 3 pages only (fast first response!)
+const SCAN_AHEAD_PAGES = 3; // Scan ahead enough for 50 pages (500 items if pageSize=10)
 
 // Simple in-memory cache with TTL - stores partial scan results
 const cache = new Map();
