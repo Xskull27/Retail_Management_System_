@@ -9,6 +9,7 @@ import Sidebar from "../components/Sidebar";
 
 export default function SalesDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,14 +31,20 @@ export default function SalesDashboard() {
     loading
   } = useSalesData();
 
+  const handleSearch = () => {
+    setSearch(searchInput);
+    setPage(1); // Reset to page 1 when search changes
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className={`flex-1 min-w-0 transition-all duration-300 ${sidebarOpen ? 'lg:ml-60' : 'lg:ml-0'}`}>
-        <Header 
-          search={search} 
-          setSearch={setSearch}
+        <Header
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          onSearch={handleSearch}
           onMenuClick={() => setSidebarOpen(true)}
           showMenuButton={!sidebarOpen}
         />
@@ -46,8 +53,8 @@ export default function SalesDashboard() {
         <div className="p-3 sm:p-4 md:p-6 max-w-screen-2xl mx-auto">
 
           <div className="mb-4">
-            <Filters 
-              filters={filters} 
+            <Filters
+              filters={filters}
               setFilters={setFilters}
               sortBy={sortBy}
               setSortBy={setSortBy}

@@ -10,7 +10,7 @@ const MAX_SCANNED_ITEMS = 1000000; // Handle up to 1M database
 const CHUNK_SIZE = 10000; // Items to scan per DynamoDB request (with filters)
 const SEARCH_ONLY_CHUNK = 100000; // Large chunks when only searching (faster full scan)
 const QUICK_RETURN_THRESHOLD = 100; // Return quickly with at least 100 matches
-const SCAN_AHEAD_PAGES = 50; // Scan ahead enough for 50 pages (500 items if pageSize=10)
+const SCAN_AHEAD_PAGES = 3; // Scan ahead for 3 pages only (fast first response!)
 
 // Simple in-memory cache with TTL - stores partial scan results
 const cache = new Map();
@@ -83,24 +83,24 @@ const buildFilterExpression = (params, filters) => {
 // Helper: Check if item matches search (case-insensitive name or phone)
 const matchesSearch = (item, searchText) => {
   if (!searchText) return true;
-  
+
   const name = item.CustomerName ? String(item.CustomerName).toLowerCase() : "";
   const phone = item.PhoneNumber ? String(item.PhoneNumber) : "";
-  
+
   return name.includes(searchText) || phone.includes(searchText);
 };
 
 // Helper: Apply filters client-side to data array
 const applyFiltersToData = (data, query) => {
   const { region, gender, ageMin, ageMax, category, tags, paymentMethod, dateFrom, dateTo } = query;
-  
+
   let filtered = [...data];
-  
+
   if (region) filtered = filtered.filter(item => item.CustomerRegion === region);
   if (gender) filtered = filtered.filter(item => item.Gender === gender);
   if (category) filtered = filtered.filter(item => item.ProductCategory === category);
   if (paymentMethod) filtered = filtered.filter(item => item.PaymentMethod === paymentMethod);
-  
+
   const minAge = ageMin ? Number(ageMin) : null;
   const maxAge = ageMax ? Number(ageMax) : null;
   if (minAge !== null) {
@@ -115,7 +115,7 @@ const applyFiltersToData = (data, query) => {
       return !Number.isNaN(age) && age <= maxAge;
     });
   }
-  
+
   if (dateFrom) {
     filtered = filtered.filter(item => {
       const itemDate = item.Date ? new Date(item.Date) : null;
@@ -128,7 +128,7 @@ const applyFiltersToData = (data, query) => {
       return itemDate && itemDate <= new Date(dateTo);
     });
   }
-  
+
   if (tags) {
     const tagList = tags.split(",").map(t => t.trim()).filter(Boolean);
     filtered = filtered.filter(item => {
@@ -136,7 +136,7 @@ const applyFiltersToData = (data, query) => {
       return tagList.every(tag => itemTags.includes(tag));
     });
   }
-  
+
   return filtered;
 };
 
@@ -172,7 +172,7 @@ export const fetchSales = async (query) => {
 
   // Cache key based on search + sort only (filters applied client-side)
   const cacheKey = getSearchCacheKey(query);
-  
+
   // Cancel only scans with DIFFERENT search terms (not different filters)
   for (const [key, scanControl] of activeScans.entries()) {
     if (key !== cacheKey) {
@@ -184,14 +184,14 @@ export const fetchSales = async (query) => {
 
   // Check cache first (search results only)
   let cached = cache.get(cacheKey);
-  
+
   if (cached) {
     // Apply filters client-side to cached search results
     let filteredData = applyFiltersToData(cached.data, query);
     const itemsNeeded = pageNum * size;
-    
+
     console.log(`🔍 Filtering cached data: ${cached.data.length} items → ${filteredData.length} after filters (region=${region}, gender=${gender})`);
-    
+
     // If we have enough filtered data for this page
     if (filteredData.length >= itemsNeeded || cached.scanComplete) {
       console.log(`✅ Using cached search data: ${cached.data.length} items → ${filteredData.length} after filters (complete: ${cached.scanComplete})`);
@@ -220,10 +220,10 @@ export const fetchSales = async (query) => {
     }
   }
 
-  
+
   // This allows search cache to be reused when filters change
   const chunkSize = SEARCH_ONLY_CHUNK;
-  
+
   let params = {
     TableName: TABLE_NAME,
     Limit: chunkSize,
@@ -250,6 +250,13 @@ export const fetchSales = async (query) => {
     all.push(...processed);
     scannedCount += items.length;
     lastKey = result.LastEvaluatedKey;
+
+    // EARLY TERMINATION: If searching and found NOTHING after scanning 10K items, stop!
+    // No point scanning all 1M rows if name doesn't exist
+    if (hasSearch && all.length === 0 && scannedCount >= 10000) {
+      console.log(`⚡ Early stop: No results found after scanning ${scannedCount} items`);
+      break;
+    }
 
     // For page 1, return quickly when we have enough search matches
     // Then apply filters client-side to these matches
@@ -292,19 +299,19 @@ export const fetchSales = async (query) => {
   });
 
   // Cache the search results
-  cache.set(cacheKey, { 
-    data: all, 
+  cache.set(cacheKey, {
+    data: all,
     timestamp: Date.now(),
     lastKey: lastKey,
     scannedCount: scannedCount,
     scanComplete: !lastKey
   });
-  
+
   // Start background scan if not complete
   if (lastKey) {
     continueBackgroundScan(cacheKey, query, cache.get(cacheKey));
   }
-  
+
   cleanCache();
 
   // Apply filters client-side to search results
@@ -334,28 +341,28 @@ const continueBackgroundScan = (cacheKey, query, cachedData) => {
   if (cachedData.backgroundScanRunning) {
     return;
   }
-  
+
   cachedData.backgroundScanRunning = true;
-  
+
   // Create scan control for this cache key
   const scanControl = { cancel: false };
   activeScans.set(cacheKey, scanControl);
-  
+
   setImmediate(async () => {
     try {
       const { sortBy = "Date", sortOrder = "desc", search = "" } = query;
-      
+
       const searchText = search.trim().toLowerCase();
       const hasSearch = searchText.length > 0;
       const chunkSize = SEARCH_ONLY_CHUNK; // Always large chunks for search
-      
+
       console.log(`🔄 Background scan continuing from ${cachedData.scannedCount} scanned items`);
-      
+
       let params = {
         TableName: TABLE_NAME,
         Limit: chunkSize,
       };
-      
+
       // NO server-side filters - we only scan for search matches
       // Filters applied client-side when data is returned
 
@@ -389,7 +396,7 @@ const continueBackgroundScan = (cacheKey, query, cachedData) => {
         // Update cache after EVERY chunk for progressive loading (both search & filters)
         if (all.length > cachedData.data.length) {
           console.log(`  📊 Background progress: ${all.length} matches from ${currentScanned} scanned`);
-          
+
           // Sort and update cache incrementally
           all.sort((a, b) => {
             let av, bv;
@@ -410,9 +417,9 @@ const continueBackgroundScan = (cacheKey, query, cachedData) => {
             if (av > bv) return sortOrder === "asc" ? 1 : -1;
             return 0;
           });
-          
-          cache.set(cacheKey, { 
-            data: all, 
+
+          cache.set(cacheKey, {
+            data: all,
             timestamp: Date.now(),
             lastKey: currentLastKey,
             scannedCount: currentScanned,
@@ -443,15 +450,15 @@ const continueBackgroundScan = (cacheKey, query, cachedData) => {
         return 0;
       });
 
-      cache.set(cacheKey, { 
-        data: all, 
+      cache.set(cacheKey, {
+        data: all,
         timestamp: Date.now(),
         lastKey: currentLastKey,
         scannedCount: currentScanned,
         scanComplete: !currentLastKey,
         backgroundScanRunning: false
       });
-      
+
       console.log(`✅ Background scan complete: ${all.length} total items, scanned ${currentScanned}`);
       activeScans.delete(cacheKey);
     } catch (error) {

@@ -1,11 +1,18 @@
 interface HeaderProps {
-    search: string;
-    setSearch: (search: string) => void;
+    searchInput: string;
+    setSearchInput: (search: string) => void;
+    onSearch: () => void;
     onMenuClick?: () => void;
     showMenuButton?: boolean;
 }
 
-export default function Header({ search, setSearch, onMenuClick, showMenuButton = false }: HeaderProps) {
+export default function Header({ searchInput, setSearchInput, onSearch, onMenuClick, showMenuButton = false }: HeaderProps) {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            onSearch();
+        }
+    };
+
     return (
         <div className="bg-white border-b border-gray-200 px-3 sm:px-4 md:px-8 py-3 sm:py-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
@@ -22,13 +29,14 @@ export default function Header({ search, setSearch, onMenuClick, showMenuButton 
                 <h1 className="text-sm sm:text-lg md:text-xl font-semibold text-gray-800 truncate">Sales Management System</h1>
             </div>
 
-            <div className="flex items-center flex-1 max-w-md ml-2 sm:ml-4">
+            <div className="flex items-center gap-2 flex-1 max-w-md ml-2 sm:ml-4">
                 <div className="relative w-full">
                     <input
                         type="text"
                         placeholder="Name, Phone no..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        onKeyPress={handleKeyPress}
                         className="w-full pl-8 sm:pl-10 pr-8 sm:pr-9 py-1.5 sm:py-2 bg-gray-100 border border-gray-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <svg
@@ -39,9 +47,9 @@ export default function Header({ search, setSearch, onMenuClick, showMenuButton 
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    {search && (
+                    {searchInput && (
                         <button
-                            onClick={() => setSearch("")}
+                            onClick={() => setSearchInput("")}
                             className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                         >
                             <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,6 +58,12 @@ export default function Header({ search, setSearch, onMenuClick, showMenuButton 
                         </button>
                     )}
                 </div>
+                <button
+                    onClick={onSearch}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex-shrink-0"
+                >
+                    Search
+                </button>
             </div>
         </div>
     );

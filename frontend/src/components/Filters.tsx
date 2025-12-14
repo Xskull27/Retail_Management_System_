@@ -260,8 +260,27 @@ export default function Filters({ filters, setFilters, sortBy, setSortBy, sortOr
               className="h-8 sm:h-9 px-2 sm:px-3 pr-6 sm:pr-8 bg-gray-100 border border-gray-300 rounded text-xs sm:text-sm text-gray-700 focus:outline-none focus:border-gray-400 cursor-pointer appearance-none hover:border-gray-400 transition-colors w-[90px] sm:w-[100px]"
             >
               <option value="">Order</option>
-              <option value="asc">Asc</option>
-              <option value="desc">Desc</option>
+              {sortBy === "CustomerName" ? (
+                <>
+                  <option value="asc">A-Z</option>
+                  <option value="desc">Z-A</option>
+                </>
+              ) : sortBy === "Date" ? (
+                <>
+                  <option value="desc">Newest</option>
+                  <option value="asc">Oldest</option>
+                </>
+              ) : sortBy === "Quantity" ? (
+                <>
+                  <option value="desc">High-Low</option>
+                  <option value="asc">Low-High</option>
+                </>
+              ) : (
+                <>
+                  <option value="asc">Asc</option>
+                  <option value="desc">Desc</option>
+                </>
+              )}
             </select>
             <div className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-xs">▼</div>
           </div>
